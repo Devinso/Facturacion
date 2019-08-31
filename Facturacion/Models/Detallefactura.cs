@@ -13,5 +13,7 @@ namespace Facturacion.Models
         public string Iva { get; set; }
         public DateTime? Fecha { get; set; }
         public int? IdFactura { get; set; }
+        public string Nombre { get; set; }
+        public string Apellido { get; set; }
     }
 }

@@ -7,7 +7,7 @@ namespace Facturacion.Models
     {
         public Proveedor()
         {
-            Usuario = new HashSet<Usuario>();
+            
         }
 
         public string IdProveedor { get; set; }
@@ -16,6 +16,6 @@ namespace Facturacion.Models
         public string Producto { get; set; }
         public int? Telefono { get; set; }
 
-        public virtual ICollection<Usuario> Usuario { get; set; }
+       
     }
 }

@@ -20,7 +20,6 @@ namespace Facturacion.Models
         public virtual DbSet<Factura> Factura { get; set; }
         public virtual DbSet<Producto> Producto { get; set; }
         public virtual DbSet<Proveedor> Proveedor { get; set; }
-        public virtual DbSet<Usuario> Usuario { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -109,9 +108,7 @@ namespace Facturacion.Models
                     .HasColumnName("precio")
                     .HasColumnType("money");
 
-                entity.Property(e => e.Producto)
-                    .HasColumnName("producto")
-                    .HasMaxLength(50);
+
             });
 
             modelBuilder.Entity<Producto>(entity =>
@@ -124,16 +121,13 @@ namespace Facturacion.Models
 
                 entity.Property(e => e.Descripcion).HasMaxLength(50);
 
-                entity.Property(e => e.IdFactura).HasColumnName("Id_Factura");
+
 
                 entity.Property(e => e.IdUsuario).HasColumnName("Id_usuario");
 
                 entity.Property(e => e.Nombreproducto).HasMaxLength(50);
 
-                entity.HasOne(d => d.IdUsuarioNavigation)
-                    .WithMany(p => p.Producto)
-                    .HasForeignKey(d => d.IdUsuario)
-                    .HasConstraintName("FK_Producto_Usuario");
+
             });
 
             modelBuilder.Entity<Proveedor>(entity =>
@@ -152,27 +146,8 @@ namespace Facturacion.Models
                 entity.Property(e => e.Producto).HasMaxLength(50);
             });
 
-            modelBuilder.Entity<Usuario>(entity =>
-            {
-                entity.HasKey(e => e.IdUsuario);
 
-                entity.Property(e => e.IdUsuario)
-                    .HasColumnName("Id_usuario")
-                    .ValueGeneratedNever();
 
-                entity.Property(e => e.Apellido).HasMaxLength(50);
-
-                entity.Property(e => e.IdProveedor)
-                    .HasColumnName("Id_proveedor")
-                    .HasMaxLength(50);
-
-                entity.Property(e => e.Nombre).HasMaxLength(50);
-
-                entity.HasOne(d => d.IdProveedorNavigation)
-                    .WithMany(p => p.Usuario)
-                    .HasForeignKey(d => d.IdProveedor)
-                    .HasConstraintName("FK_Usuario_Proveedor");
-            });
         }
     }
 }

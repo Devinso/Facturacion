@@ -9,22 +9,22 @@ using Facturacion.Models;
 
 namespace Facturacion.Controllers
 {
-    public class FacturasController : Controller
+    public class DetallefacturasController : Controller
     {
         private readonly FacturacionContext _context;
 
-        public FacturasController(FacturacionContext context)
+        public DetallefacturasController(FacturacionContext context)
         {
             _context = context;
         }
 
-        // GET: Facturas
+        // GET: Detallefacturas
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Factura.ToListAsync());
+            return View(await _context.Detallefactura.ToListAsync());
         }
 
-        // GET: Facturas/Details/5
+        // GET: Detallefacturas/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -32,39 +32,39 @@ namespace Facturacion.Controllers
                 return NotFound();
             }
 
-            var factura = await _context.Factura
-                .FirstOrDefaultAsync(m => m.IdFactura == id);
-            if (factura == null)
+            var detallefactura = await _context.Detallefactura
+                .FirstOrDefaultAsync(m => m.IdDetallefactura == id);
+            if (detallefactura == null)
             {
                 return NotFound();
             }
 
-            return View(factura);
+            return View(detallefactura);
         }
 
-        // GET: Facturas/Create
+        // GET: Detallefacturas/Create
         public IActionResult Create()
         {
             return View();
         }
 
-        // POST: Facturas/Create
+        // POST: Detallefacturas/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("IdFactura,Fecha,Precio,Producto,IdUsuario,Cantidad,Total,Iva,IdCliente")] Factura factura)
+        public async Task<IActionResult> Create([Bind("IdDetallefactura,Producto,Precio,Cantidad,Total,Iva,Fecha,IdFactura")] Detallefactura detallefactura)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(factura);
+                _context.Add(detallefactura);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(factura);
+            return View(detallefactura);
         }
 
-        // GET: Facturas/Edit/5
+        // GET: Detallefacturas/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -72,22 +72,22 @@ namespace Facturacion.Controllers
                 return NotFound();
             }
 
-            var factura = await _context.Factura.FindAsync(id);
-            if (factura == null)
+            var detallefactura = await _context.Detallefactura.FindAsync(id);
+            if (detallefactura == null)
             {
                 return NotFound();
             }
-            return View(factura);
+            return View(detallefactura);
         }
 
-        // POST: Facturas/Edit/5
+        // POST: Detallefacturas/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("IdFactura,Fecha,Precio,Producto,IdUsuario,Cantidad,Total,Iva,IdCliente")] Factura factura)
+        public async Task<IActionResult> Edit(int id, [Bind("IdDetallefactura,Producto,Precio,Cantidad,Total,Iva,Fecha,IdFactura")] Detallefactura detallefactura)
         {
-            if (id != factura.IdFactura)
+            if (id != detallefactura.IdDetallefactura)
             {
                 return NotFound();
             }
@@ -96,12 +96,12 @@ namespace Facturacion.Controllers
             {
                 try
                 {
-                    _context.Update(factura);
+                    _context.Update(detallefactura);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!FacturaExists(factura.IdFactura))
+                    if (!DetallefacturaExists(detallefactura.IdDetallefactura))
                     {
                         return NotFound();
                     }
@@ -112,10 +112,10 @@ namespace Facturacion.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(factura);
+            return View(detallefactura);
         }
 
-        // GET: Facturas/Delete/5
+        // GET: Detallefacturas/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -123,32 +123,30 @@ namespace Facturacion.Controllers
                 return NotFound();
             }
 
-            var factura = await _context.Factura
-                .FirstOrDefaultAsync(m => m.IdFactura == id);
-            if (factura == null)
+            var detallefactura = await _context.Detallefactura
+                .FirstOrDefaultAsync(m => m.IdDetallefactura == id);
+            if (detallefactura == null)
             {
                 return NotFound();
             }
 
-            return View(factura);
+            return View(detallefactura);
         }
 
-        // POST: Facturas/Delete/5
+        // POST: Detallefacturas/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var factura = await _context.Factura.FindAsync(id);
-            _context.Factura.Remove(factura);
+            var detallefactura = await _context.Detallefactura.FindAsync(id);
+            _context.Detallefactura.Remove(detallefactura);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool FacturaExists(int id)
+        private bool DetallefacturaExists(int id)
         {
-            return _context.Factura.Any(e => e.IdFactura == id);
+            return _context.Detallefactura.Any(e => e.IdDetallefactura == id);
         }
-        
     }
 }
-
