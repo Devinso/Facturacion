@@ -11,7 +11,9 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Facturacion.Models;
 using Microsoft.EntityFrameworkCore;
-
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc.Authorization;
+using Facturacion.Authorization;
 
 namespace Facturacion
 {
@@ -27,6 +29,18 @@ namespace Facturacion
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddMvc(config =>
+            {
+                var policy = new AuthorizationPolicyBuilder()
+                .RequireAuthenticatedUser()
+                .Build();
+                config.Filters.Add(new AuthorizeFilter(policy));
+            }
+).SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+            services.AddScoped<IAuthorizationHandler , TecnicoAuthorizationHandler>();
+           
+            services.AddDbContext< FacturacionContext> (options =>
+            options.UseSqlServer(Configuration.GetConnectionString("FacturacionContext")));
             services.Configure<CookiePolicyOptions>(options =>
             {
                 // This lambda determines whether user consent for non-essential cookies is needed for a given request.
@@ -53,12 +67,13 @@ namespace Facturacion
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
-
+            app.UseAuthentication();
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseCookiePolicy();
-
+            app.UseAuthentication();
             app.UseMvc(routes =>
+            
             {
                 routes.MapRoute(
                     name: "default",

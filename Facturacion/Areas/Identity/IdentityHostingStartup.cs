@@ -19,7 +19,7 @@ namespace Facturacion.Areas.Identity
                     options.UseSqlServer(
                         context.Configuration.GetConnectionString("FacturacionContext")));
 
-                services.AddDefaultIdentity<IdentityUser>()
+                services.AddDefaultIdentity<IdentityUser>().AddRoles<IdentityRole>()
                     .AddEntityFrameworkStores<FacturacionIdentityContext>();
             });
         }

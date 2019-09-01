@@ -42,9 +42,10 @@ namespace Facturacion.Areas.Identity.Pages.Account
 
             [Required]
             [DataType(DataType.Password)]
+            [Display(Name = "Clave")]
             public string Password { get; set; }
 
-            [Display(Name = "Remember me?")]
+            [Display(Name = "Recordar?")]
             public bool RememberMe { get; set; }
         }
 
