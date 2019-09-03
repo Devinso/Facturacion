@@ -58,7 +58,21 @@ namespace Facturacion.Controllers
             if (ModelState.IsValid)
             {
                 _context.Add(detallefactura);
+                _context.SaveChanges();
+
+                int id_factura = (int)detallefactura.IdFactura;
+
+                var factura = _context.Factura.FirstOrDefault(f => f.IdFactura == id_factura);
+                decimal subtotal = 0;
+                foreach (var item in _context.Detallefactura.Where(d => d.IdFactura == id_factura))
+                {
+                    subtotal += item.Total;
+                }
+                factura.Subtotal = subtotal;
+                factura.Iva = subtotal * (decimal)0.15;
+                factura.Total = subtotal - factura.Iva;
                 await _context.SaveChangesAsync();
+
                 return RedirectToAction(nameof(Index));
             }
             return View(detallefactura);
@@ -97,6 +111,20 @@ namespace Facturacion.Controllers
                 try
                 {
                     _context.Update(detallefactura);
+                    _context.SaveChanges();
+
+
+                    int id_factura = (int)detallefactura.IdFactura;
+
+                    var factura = _context.Factura.FirstOrDefault(f => f.IdFactura == id_factura);
+                    decimal subtotal = 0;
+                    foreach (var item in _context.Detallefactura.Where(d => d.IdFactura == id_factura))
+                    {
+                        subtotal += item.Total;
+                    }
+                    factura.Subtotal = subtotal;
+                    factura.Iva = subtotal * (decimal)0.15;
+                    factura.Total = subtotal - factura.Iva;
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
