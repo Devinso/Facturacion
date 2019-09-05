@@ -21,143 +21,152 @@ namespace Facturacion.Migrations
 
             modelBuilder.Entity("Facturacion.Models.Cliente", b =>
                 {
-                    b.Property<int>("IdCliente")
-                        .HasColumnName("Id_cliente");
+                    b.Property<int>("ClienteId")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("Apellido")
-                        .HasMaxLength(50);
+                    b.Property<string>("Apellido");
 
-                    b.Property<string>("Direccion")
-                        .HasMaxLength(50);
+                    b.Property<string>("Direccion");
 
-                    b.Property<string>("Emeil")
-                        .HasMaxLength(50);
+                    b.Property<string>("Emeil");
 
-                    b.Property<string>("Nombre")
-                        .HasMaxLength(50);
+                    b.Property<string>("Nombre");
 
                     b.Property<int?>("Telefono");
 
-                    b.HasKey("IdCliente");
+                    b.HasKey("ClienteId");
 
                     b.ToTable("Cliente");
                 });
 
             modelBuilder.Entity("Facturacion.Models.Detallefactura", b =>
                 {
-                    b.Property<int>("IdDetallefactura")
-                        .HasColumnName("Id_detallefactura");
+                    b.Property<int>("DetalleFacturaId")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("Apellido");
 
-                    b.Property<decimal>("Cantidad")
-                        .HasColumnName("cantidad")
-                        .HasMaxLength(10);
+                    b.Property<decimal>("Cantidad");
 
-                    b.Property<DateTime?>("Fecha")
-                        .HasColumnName("fecha")
-                        .HasColumnType("date");
+                    b.Property<int>("FacturaId");
 
-                    b.Property<int>("IdFactura")
-                        .HasColumnName("Id_Factura");
+                    b.Property<DateTime?>("Fecha");
 
-                    b.Property<decimal>("Iva")
-                        .HasColumnName("IVA")
-                        .HasMaxLength(10);
+                    b.Property<int>("IdFactura");
+
+                    b.Property<decimal>("Iva");
 
                     b.Property<string>("Nombre");
 
-                    b.Property<decimal>("Precio")
-                        .HasColumnName("precio")
-                        .HasColumnType("money");
+                    b.Property<decimal>("Precio");
 
-                    b.Property<string>("Producto")
-                        .HasColumnName("producto")
-                        .HasMaxLength(50);
+                    b.Property<int>("ProductoId");
 
-                    b.Property<decimal>("Total")
-                        .HasColumnName("total");
+                    b.Property<decimal>("Total");
 
-                    b.HasKey("IdDetallefactura");
+                    b.HasKey("DetalleFacturaId");
+
+                    b.HasIndex("FacturaId");
+
+                    b.HasIndex("ProductoId");
 
                     b.ToTable("Detallefactura");
                 });
 
             modelBuilder.Entity("Facturacion.Models.Factura", b =>
                 {
-                    b.Property<int>("IdFactura")
-                        .HasColumnName("Id_factura");
+                    b.Property<int>("FacturaId")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int?>("Cantidad")
-                        .HasColumnName("cantidad");
+                    b.Property<int?>("Cantidad");
 
-                    b.Property<DateTime?>("Fecha")
-                        .HasColumnName("fecha")
-                        .HasColumnType("date");
+                    b.Property<int>("ClienteId");
 
-                    b.Property<int?>("IdCliente")
-                        .HasColumnName("Id_cliente");
+                    b.Property<DateTime?>("Fecha");
 
-                    b.Property<int?>("IdUsuario")
-                        .HasColumnName("Id_usuario");
+                    b.Property<decimal>("Iva");
 
-                    b.Property<decimal>("Iva")
-                        .HasColumnName("IVA");
-
-                    b.Property<decimal?>("Precio")
-                        .HasColumnName("precio")
-                        .HasColumnType("money");
+                    b.Property<decimal?>("Precio");
 
                     b.Property<decimal>("Subtotal");
 
                     b.Property<decimal>("Total");
 
-                    b.HasKey("IdFactura");
+                    b.HasKey("FacturaId");
+
+                    b.HasIndex("ClienteId");
 
                     b.ToTable("Factura");
                 });
 
             modelBuilder.Entity("Facturacion.Models.Producto", b =>
                 {
-                    b.Property<int>("IdProducto")
-                        .HasColumnName("Id_producto");
+                    b.Property<int>("ProductoId")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("Descripcion")
-                        .HasMaxLength(50);
+                    b.Property<string>("Descripcion");
 
-                    b.Property<int?>("IdUsuario")
-                        .HasColumnName("Id_usuario");
-
-                    b.Property<string>("Nombreproducto")
-                        .HasMaxLength(50);
+                    b.Property<string>("Nombreproducto");
 
                     b.Property<int?>("Precio");
 
-                    b.HasKey("IdProducto");
+                    b.Property<int>("ProveedorId");
+
+                    b.HasKey("ProductoId");
+
+                    b.HasIndex("ProveedorId");
 
                     b.ToTable("Producto");
                 });
 
             modelBuilder.Entity("Facturacion.Models.Proveedor", b =>
                 {
-                    b.Property<string>("IdProveedor")
-                        .HasColumnName("Id_proveedor")
-                        .HasMaxLength(50);
+                    b.Property<int>("ProveedorId")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("Apellido")
-                        .HasMaxLength(50);
+                    b.Property<string>("Apellido");
 
-                    b.Property<string>("Nombre")
-                        .HasMaxLength(50);
-
-                    b.Property<string>("Producto")
-                        .HasMaxLength(50);
+                    b.Property<string>("Nombre");
 
                     b.Property<int?>("Telefono");
 
-                    b.HasKey("IdProveedor");
+                    b.HasKey("ProveedorId");
 
                     b.ToTable("Proveedor");
+                });
+
+            modelBuilder.Entity("Facturacion.Models.Detallefactura", b =>
+                {
+                    b.HasOne("Facturacion.Models.Factura", "Factura")
+                        .WithMany("Detallefactura")
+                        .HasForeignKey("FacturaId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("Facturacion.Models.Producto", "Producto")
+                        .WithMany("Detallefactura")
+                        .HasForeignKey("ProductoId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("Facturacion.Models.Factura", b =>
+                {
+                    b.HasOne("Facturacion.Models.Cliente", "Cliente")
+                        .WithMany("Factura")
+                        .HasForeignKey("ClienteId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("Facturacion.Models.Producto", b =>
+                {
+                    b.HasOne("Facturacion.Models.Proveedor", "Proveedor")
+                        .WithMany("Producto")
+                        .HasForeignKey("ProveedorId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 #pragma warning restore 612, 618
         }

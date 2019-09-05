@@ -45,7 +45,7 @@ namespace Facturacion.Areas.Identity.Pages.Account
             [Display(Name = "Clave")]
             public string Password { get; set; }
 
-            [Display(Name = "Recordar?")]
+            [Display(Name = "Recordar")]
             public bool RememberMe { get; set; }
         }
 

@@ -9,6 +9,7 @@ using Facturacion.Models;
 
 namespace Facturacion.Controllers
 {
+   
     public class FacturasController : Controller
     {
         private readonly FacturacionContext _context;
@@ -21,7 +22,8 @@ namespace Facturacion.Controllers
         // GET: Facturas
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Factura.ToListAsync());
+            var facturacionContext = _context.Factura.Include(f => f.Cliente);
+            return View(await facturacionContext.ToListAsync());
         }
 
         // GET: Facturas/Details/5
@@ -33,7 +35,8 @@ namespace Facturacion.Controllers
             }
 
             var factura = await _context.Factura
-                .FirstOrDefaultAsync(m => m.IdFactura == id);
+                .Include(f => f.Cliente)
+                .FirstOrDefaultAsync(m => m.FacturaId == id);
             if (factura == null)
             {
                 return NotFound();
@@ -45,6 +48,7 @@ namespace Facturacion.Controllers
         // GET: Facturas/Create
         public IActionResult Create()
         {
+            ViewData["ClienteId"] = new SelectList(_context.Cliente, "ClienteId", "ClienteId");
             return View();
         }
 
@@ -53,14 +57,16 @@ namespace Facturacion.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("IdFactura,Fecha,Precio,Producto,IdUsuario,Cantidad,Total,Iva,IdCliente")] Factura factura)
+        public async Task<IActionResult> Create([Bind("FacturaId,Fecha,Precio,Cantidad,Subtotal,Iva,Total,ClienteId")] Factura factura)
         {
             if (ModelState.IsValid)
             {
                 _context.Add(factura);
                 await _context.SaveChangesAsync();
+     
                 return RedirectToAction(nameof(Index));
             }
+            ViewData["ClienteId"] = new SelectList(_context.Cliente, "ClienteId", "ClienteId", factura.ClienteId);
             return View(factura);
         }
 
@@ -77,6 +83,7 @@ namespace Facturacion.Controllers
             {
                 return NotFound();
             }
+            ViewData["ClienteId"] = new SelectList(_context.Cliente, "ClienteId", "ClienteId", factura.ClienteId);
             return View(factura);
         }
 
@@ -85,9 +92,9 @@ namespace Facturacion.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("IdFactura,Fecha,Precio,Producto,IdUsuario,Cantidad,Total,Iva,IdCliente")] Factura factura)
+        public async Task<IActionResult> Edit(int id, [Bind("FacturaId,Fecha,Precio,Cantidad,Subtotal,Iva,Total,ClienteId")] Factura factura)
         {
-            if (id != factura.IdFactura)
+            if (id != factura.FacturaId)
             {
                 return NotFound();
             }
@@ -101,7 +108,7 @@ namespace Facturacion.Controllers
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!FacturaExists(factura.IdFactura))
+                    if (!FacturaExists(factura.FacturaId))
                     {
                         return NotFound();
                     }
@@ -112,6 +119,7 @@ namespace Facturacion.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
+            ViewData["ClienteId"] = new SelectList(_context.Cliente, "ClienteId", "ClienteId", factura.ClienteId);
             return View(factura);
         }
 
@@ -124,7 +132,8 @@ namespace Facturacion.Controllers
             }
 
             var factura = await _context.Factura
-                .FirstOrDefaultAsync(m => m.IdFactura == id);
+                .Include(f => f.Cliente)
+                .FirstOrDefaultAsync(m => m.FacturaId == id);
             if (factura == null)
             {
                 return NotFound();
@@ -146,9 +155,7 @@ namespace Facturacion.Controllers
 
         private bool FacturaExists(int id)
         {
-            return _context.Factura.Any(e => e.IdFactura == id);
+            return _context.Factura.Any(e => e.FacturaId == id);
         }
-        
     }
 }
-

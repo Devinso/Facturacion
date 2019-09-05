@@ -33,7 +33,7 @@ namespace Facturacion.Controllers
             }
 
             var cliente = await _context.Cliente
-                .FirstOrDefaultAsync(m => m.IdCliente == id);
+                .FirstOrDefaultAsync(m => m.ClienteId == id);
             if (cliente == null)
             {
                 return NotFound();
@@ -53,7 +53,7 @@ namespace Facturacion.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("IdCliente,Nombre,Apellido,Direccion,Emeil,Telefono")] Cliente cliente)
+        public async Task<IActionResult> Create([Bind("ClienteId,Nombre,Apellido,Direccion,Emeil,Telefono")] Cliente cliente)
         {
             if (ModelState.IsValid)
             {
@@ -85,9 +85,9 @@ namespace Facturacion.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("IdCliente,Nombre,Apellido,Direccion,Emeil,Telefono")] Cliente cliente)
+        public async Task<IActionResult> Edit(int id, [Bind("ClienteId,Nombre,Apellido,Direccion,Emeil,Telefono")] Cliente cliente)
         {
-            if (id != cliente.IdCliente)
+            if (id != cliente.ClienteId)
             {
                 return NotFound();
             }
@@ -101,7 +101,7 @@ namespace Facturacion.Controllers
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!ClienteExists(cliente.IdCliente))
+                    if (!ClienteExists(cliente.ClienteId))
                     {
                         return NotFound();
                     }
@@ -124,7 +124,7 @@ namespace Facturacion.Controllers
             }
 
             var cliente = await _context.Cliente
-                .FirstOrDefaultAsync(m => m.IdCliente == id);
+                .FirstOrDefaultAsync(m => m.ClienteId == id);
             if (cliente == null)
             {
                 return NotFound();
@@ -146,7 +146,7 @@ namespace Facturacion.Controllers
 
         private bool ClienteExists(int id)
         {
-            return _context.Cliente.Any(e => e.IdCliente == id);
+            return _context.Cliente.Any(e => e.ClienteId == id);
         }
     }
 }

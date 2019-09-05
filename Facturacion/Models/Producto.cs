@@ -5,13 +5,16 @@ namespace Facturacion.Models
 {
     public partial class Producto
     {
-        public int IdProducto { get; set; }
+        public int ProductoId { get; set; }
         public string Nombreproducto { get; set; }
         public string Descripcion { get; set; }
         
-        public int? IdUsuario { get; set; }
         public int? Precio { get; set; }
 
-       
+        public int ProveedorId { get; set; }
+
+        public Proveedor Proveedor { get; set; }
+
+        public List<Detallefactura> Detallefactura { get; set; }
     }
 }

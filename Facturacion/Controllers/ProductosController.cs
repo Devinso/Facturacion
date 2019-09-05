@@ -9,22 +9,23 @@ using Facturacion.Models;
 
 namespace Facturacion.Controllers
 {
-    public class ProveedorsController : Controller
+    public class ProductosController : Controller
     {
         private readonly FacturacionContext _context;
 
-        public ProveedorsController(FacturacionContext context)
+        public ProductosController(FacturacionContext context)
         {
             _context = context;
         }
 
-        // GET: Proveedors
+        // GET: Productos
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Proveedor.ToListAsync());
+            var facturacionContext = _context.Producto.Include(p => p.Proveedor);
+            return View(await facturacionContext.ToListAsync());
         }
 
-        // GET: Proveedors/Details/5
+        // GET: Productos/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -32,39 +33,42 @@ namespace Facturacion.Controllers
                 return NotFound();
             }
 
-            var proveedor = await _context.Proveedor
-                .FirstOrDefaultAsync(m => m.ProveedorId == id);
-            if (proveedor == null)
+            var producto = await _context.Producto
+                .Include(p => p.Proveedor)
+                .FirstOrDefaultAsync(m => m.ProductoId == id);
+            if (producto == null)
             {
                 return NotFound();
             }
 
-            return View(proveedor);
+            return View(producto);
         }
 
-        // GET: Proveedors/Create
+        // GET: Productos/Create
         public IActionResult Create()
         {
+            ViewData["ProveedorId"] = new SelectList(_context.Proveedor, "ProveedorId", "Nombre");
             return View();
         }
 
-        // POST: Proveedors/Create
+        // POST: Productos/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ProveedorId,Nombre,Apellido,Telefono")] Proveedor proveedor)
+        public async Task<IActionResult> Create([Bind("ProductoId,Nombreproducto,Descripcion,Precio,ProveedorId")] Producto producto)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(proveedor);
+                _context.Add(producto);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(proveedor);
+            ViewData["ProveedorId"] = new SelectList(_context.Proveedor, "ProveedorId", "ProveedorId", producto.ProveedorId);
+            return View(producto);
         }
 
-        // GET: Proveedors/Edit/5
+        // GET: Productos/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -72,22 +76,23 @@ namespace Facturacion.Controllers
                 return NotFound();
             }
 
-            var proveedor = await _context.Proveedor.FindAsync(id);
-            if (proveedor == null)
+            var producto = await _context.Producto.FindAsync(id);
+            if (producto == null)
             {
                 return NotFound();
             }
-            return View(proveedor);
+            ViewData["ProveedorId"] = new SelectList(_context.Proveedor, "ProveedorId", "Nombre", producto.ProveedorId);
+            return View(producto);
         }
 
-        // POST: Proveedors/Edit/5
+        // POST: Productos/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("ProveedorId,Nombre,Apellido,Telefono")] Proveedor proveedor)
+        public async Task<IActionResult> Edit(int id, [Bind("ProductoId,Nombreproducto,Descripcion,Precio,ProveedorId")] Producto producto)
         {
-            if (id != proveedor.ProveedorId)
+            if (id != producto.ProductoId)
             {
                 return NotFound();
             }
@@ -96,12 +101,12 @@ namespace Facturacion.Controllers
             {
                 try
                 {
-                    _context.Update(proveedor);
+                    _context.Update(producto);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!ProveedorExists(proveedor.ProveedorId))
+                    if (!ProductoExists(producto.ProductoId))
                     {
                         return NotFound();
                     }
@@ -112,10 +117,11 @@ namespace Facturacion.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(proveedor);
+            ViewData["ProveedorId"] = new SelectList(_context.Proveedor, "ProveedorId", "ProveedorId", producto.ProveedorId);
+            return View(producto);
         }
 
-        // GET: Proveedors/Delete/5
+        // GET: Productos/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -123,30 +129,31 @@ namespace Facturacion.Controllers
                 return NotFound();
             }
 
-            var proveedor = await _context.Proveedor
-                .FirstOrDefaultAsync(m => m.ProveedorId == id);
-            if (proveedor == null)
+            var producto = await _context.Producto
+                .Include(p => p.Proveedor)
+                .FirstOrDefaultAsync(m => m.ProductoId == id);
+            if (producto == null)
             {
                 return NotFound();
             }
 
-            return View(proveedor);
+            return View(producto);
         }
 
-        // POST: Proveedors/Delete/5
+        // POST: Productos/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var proveedor = await _context.Proveedor.FindAsync(id);
-            _context.Proveedor.Remove(proveedor);
+            var producto = await _context.Producto.FindAsync(id);
+            _context.Producto.Remove(producto);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool ProveedorExists(int id)
+        private bool ProductoExists(int id)
         {
-            return _context.Proveedor.Any(e => e.ProveedorId == id);
+            return _context.Producto.Any(e => e.ProductoId == id);
         }
     }
 }
